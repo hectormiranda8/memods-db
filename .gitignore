@@ -1,0 +1,5 @@
+# Nothing here is built, but editors are editors.
+.vs/
+.idea/
+*.user
+.DS_Store

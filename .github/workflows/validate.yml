@@ -1,0 +1,61 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  validate:
+    # Packs are data and the validator is platform-neutral, so this runs on
+    # Linux. Nothing here needs a game, or Windows, or a running process.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the database
+        uses: actions/checkout@v4
+        with:
+          path: db
+
+      - name: Check out memods
+        uses: actions/checkout@v4
+        with:
+          repository: hectormiranda8/memods
+          path: app
+          # Required only while the app repository is private. Create a PAT with
+          # read access to it and store it as MEMODS_APP_TOKEN.
+          token: ${{ secrets.MEMODS_APP_TOKEN || github.token }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build memods-cli
+        run: dotnet build app/src/MeMods.Cli -c Release
+
+      - name: Validate every pack
+        shell: bash
+        run: |
+          set -uo pipefail
+          cli="app/src/MeMods.Cli/bin/Release/net9.0/memods-cli"
+          failed=0
+          found=0
+
+          while IFS= read -r pack; do
+            found=$((found + 1))
+            echo "::group::$pack"
+            # --strict applies the publishing rules: no session-only anchors,
+            # provenance present, invariants on every value.
+            if ! "$cli" validate "$pack" --strict; then
+              failed=$((failed + 1))
+              echo "::error file=$pack::pack failed strict validation"
+            fi
+            echo "::endgroup::"
+          done < <(find db/packs -name '*.memods.json' -print | sort)
+
+          echo "validated $found pack(s), $failed failed"
+          exit $((failed > 0))
