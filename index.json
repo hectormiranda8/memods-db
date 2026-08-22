@@ -14,6 +14,20 @@
       "cheats": 6,
       "targets": 1,
       "verified": "2026-08-21"
+    },
+    {
+      "id": "slay-the-spire-2",
+      "title": "Slay the Spire 2",
+      "path": "packs/slay-the-spire-2/slay-the-spire-2.memods.json",
+      "sha256": "124dacf877b17a0e4707a7921b13b53605826a962b04976fc1946f5cce6abe2d",
+      "size": 8453,
+      "processes": [
+        "SlayTheSpire2.exe"
+      ],
+      "steam_app_id": 2868840,
+      "cheats": 5,
+      "targets": 1,
+      "verified": "2026-08-22"
     }
   ]
 }

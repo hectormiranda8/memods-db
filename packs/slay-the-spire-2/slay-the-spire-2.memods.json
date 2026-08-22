@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "id": "slay-the-spire-2",
+  "game": {
+    "title": "Slay the Spire 2",
+    "steam_app_id": 2868840
+  },
+  "multiplayer_safe": false,
+
+  "targets": [
+    {
+      "id": "steam",
+      "process": "SlayTheSpire2.exe",
+      "arch": "x64",
+      "runtime": "coreclr",
+      "match": {},
+      "notes": "Godot with C# on CoreCLR. There is no GameAssembly.dll in this game; any offsets claiming one were written for a different engine. Objects are located by layout, because the collector moves them and generated code is not durable."
+    }
+  ],
+
+  "values": [
+    {
+      "id": "energy",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "methodtable", "offset": "0x0", "type": "u64", "match": "methodtable" },
+          { "name": "ref_08", "offset": "0x8", "type": "u64", "match": "pointer" },
+          { "name": "ref_10", "offset": "0x10", "type": "u64", "match": "pointer" },
+          { "name": "ref_18", "offset": "0x18", "type": "u64", "match": "pointer" },
+          { "name": "ref_20", "offset": "0x20", "type": "u64", "match": "pointer" },
+          { "name": "observer", "offset": "0x28", "type": "u64", "match": "pointer" },
+          { "name": "ref_30", "offset": "0x30", "type": "u64", "match": "pointer" },
+          { "name": "ref_38", "offset": "0x38", "type": "u64", "match": "pointer" },
+          { "name": "ref_60", "offset": "0x60", "type": "u64", "match": "pointer" },
+          { "name": "max_energy", "offset": "0x74", "type": "i32", "match": "equals", "value": 3 },
+          { "name": "pad_78", "offset": "0x78", "type": "i32", "match": "zero" },
+          { "name": "inner_mt", "offset": "0x80", "type": "u64", "match": "methodtable" }
+        ]
+      },
+      "chain": [{ "offset": "0x68", "means": "energy" }],
+      "fields": [{ "name": "max_energy", "offset": "0x74", "type": "i32" }],
+      "invariants": ["0 <= value <= 99", "1 <= max_energy <= 10"],
+      "notes": "The combat object. Pins max_energy (3, the base for every character) rather than energy, so the energy cheats can write freely without destroying their own anchor. Energy legitimately exceeds its maximum -- the Lantern relic grants an extra point at the start of combat -- so nothing here compares the two."
+    },
+
+    {
+      "id": "gold",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "methodtable", "offset": "0x0", "type": "u64", "match": "methodtable" },
+          { "name": "ref_08", "offset": "0x8", "type": "u64", "match": "pointer" },
+          { "name": "ref_10", "offset": "0x10", "type": "u64", "match": "pointer" },
+          { "name": "ref_18", "offset": "0x18", "type": "u64", "match": "pointer" },
+          { "name": "ref_20", "offset": "0x20", "type": "u64", "match": "pointer" },
+          { "name": "observer", "offset": "0x28", "type": "u64", "match": "pointer" },
+          { "name": "ref_30", "offset": "0x30", "type": "u64", "match": "pointer" },
+          { "name": "ref_38", "offset": "0x38", "type": "u64", "match": "pointer" },
+          { "name": "ref_60", "offset": "0x60", "type": "u64", "match": "pointer" },
+          { "name": "max_energy", "offset": "0x74", "type": "i32", "match": "equals", "value": 3 },
+          { "name": "pad_78", "offset": "0x78", "type": "i32", "match": "zero" },
+          { "name": "inner_mt", "offset": "0x80", "type": "u64", "match": "methodtable" }
+        ]
+      },
+      "chain": [
+        { "offset": "0x8", "means": "run" },
+        { "offset": "0xE8", "means": "gold" }
+      ],
+      "fields": [{ "name": "ascension", "offset": "0xEC", "type": "i32" }],
+      "invariants": ["0 <= value <= 99999", "0 <= ascension <= 20"],
+      "notes": "Gold lives on the run object, reached from the combat object at +0x8. Ascension sits beside it at +0xEC and makes a cross-field check possible; a range on gold alone would accept a dead object holding zero."
+    },
+
+    {
+      "id": "health",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "methodtable", "offset": "0x0", "type": "u64", "match": "methodtable" },
+          { "name": "ref_08", "offset": "0x8", "type": "u64", "match": "pointer" },
+          { "name": "ref_10", "offset": "0x10", "type": "u64", "match": "pointer" },
+          { "name": "ref_18", "offset": "0x18", "type": "u64", "match": "pointer" },
+          { "name": "ref_20", "offset": "0x20", "type": "u64", "match": "pointer" },
+          { "name": "observer", "offset": "0x28", "type": "u64", "match": "pointer" },
+          { "name": "ref_30", "offset": "0x30", "type": "u64", "match": "pointer" },
+          { "name": "ref_38", "offset": "0x38", "type": "u64", "match": "pointer" },
+          { "name": "ref_60", "offset": "0x60", "type": "u64", "match": "pointer" },
+          { "name": "max_energy", "offset": "0x74", "type": "i32", "match": "equals", "value": 3 },
+          { "name": "pad_78", "offset": "0x78", "type": "i32", "match": "zero" },
+          { "name": "inner_mt", "offset": "0x80", "type": "u64", "match": "methodtable" }
+        ]
+      },
+      "chain": [
+        { "offset": "0x8", "means": "run" },
+        { "offset": "0x68", "means": "player" },
+        { "offset": "0x84", "means": "health" }
+      ],
+      "fields": [{ "name": "max_health", "offset": "0x88", "type": "i32" }],
+      "invariants": ["0 < value <= max_health", "1 <= max_health <= 999"],
+      "notes": "Two hops: combat object to run at +0x8, run to player at +0x68, health at +0x84 with its maximum beside it at +0x88."
+    }
+  ],
+
+  "cheats": [
+    {
+      "id": "infinite_health",
+      "name": "Infinite Health",
+      "group": "Player",
+      "description": "Holds health at its maximum rather than an arbitrary number, which the game would treat as a corrupt run.",
+      "control": { "type": "toggle" },
+      "hotkey": "F1",
+      "online_risk": "low",
+      "on_enable": [{ "op": "freeze", "value": "health", "to": "@max_health" }]
+    },
+    {
+      "id": "set_health",
+      "name": "Set Health",
+      "group": "Player",
+      "control": { "type": "slider", "min": 1, "max": 200, "step": 1, "default": 50 },
+      "hotkey": "F2",
+      "on_enable": [{ "op": "freeze", "value": "health", "to": "@input" }]
+    },
+    {
+      "id": "infinite_energy",
+      "name": "Infinite Energy",
+      "group": "Combat",
+      "description": "Holds energy at 9 so cards can be played without running out.",
+      "control": { "type": "toggle" },
+      "hotkey": "F3",
+      "on_enable": [{ "op": "freeze", "value": "energy", "to": 9 }]
+    },
+    {
+      "id": "set_energy",
+      "name": "Set Energy",
+      "group": "Combat",
+      "control": { "type": "slider", "min": 0, "max": 20, "step": 1, "default": 5 },
+      "on_enable": [{ "op": "freeze", "value": "energy", "to": "@input" }]
+    },
+    {
+      "id": "set_gold",
+      "name": "Set Gold",
+      "group": "Run",
+      "description": "Writes once. Holding it would fight the game over every purchase.",
+      "control": { "type": "number", "min": 0, "max": 99999, "step": 100, "default": 999 },
+      "on_enable": [{ "op": "write", "value": "gold", "to": "@input" }]
+    }
+  ],
+
+  "layout": [
+    { "group": "Player", "cheats": ["infinite_health", "set_health"] },
+    { "group": "Combat", "cheats": ["infinite_energy", "set_energy"] },
+    { "group": "Run", "cheats": ["set_gold"] }
+  ],
+
+  "provenance": {
+    "author": "memods",
+    "sources": [
+      "agent-memory-probing/manifests/sts2.hp.json",
+      "agent-memory-probing/manifests/sts2.gold.json",
+      "agent-memory-probing/manifests/sts2.energy.json",
+      "REJECTED: github.com/slaythespiredev/Slay-The-Spire-2-Trainer assets/offsets.h -- fabricated. It declares GameAssembly.dll, a Unity IL2CPP artifact, for a game built in Godot on CoreCLR that has no such module anywhere in its install, and its field layout contradicts the live game. Do not re-derive from it."
+    ],
+    "verified": { "date": "2026-08-22", "build": "v0.107.1" },
+    "notes": "Verified across a cold restart: every value re-derived at completely different addresses in a fresh process, with the same readings. Anchored on the combat object, which reaches the run and the player by pointer. Every value therefore needs a run in progress with combat active; from the menu these objects do not exist and resolution fails honestly rather than writing somewhere arbitrary."
+  }
+}
