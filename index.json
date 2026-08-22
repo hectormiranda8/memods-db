@@ -1,5 +1,19 @@
 {
   "schema": 1,
-  "updated": "2026-08-21",
-  "packs": []
+  "updated": "2026-08-22",
+  "packs": [
+    {
+      "id": "dummy-target",
+      "title": "Dummy Target",
+      "path": "packs/dummy-target/dummy-target.memods.json",
+      "sha256": "4602a159907ead63b7588e17624068c717d6ad8bb3ebfec8b2b03cd182b84188",
+      "size": 5877,
+      "processes": [
+        "dummy-target.exe"
+      ],
+      "cheats": 6,
+      "targets": 1,
+      "verified": "2026-08-21"
+    }
+  ]
 }

@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "id": "dummy-target",
+  "game": {
+    "title": "Dummy Target"
+  },
+  "multiplayer_safe": true,
+
+  "targets": [
+    {
+      "id": "dev",
+      "process": "dummy-target.exe",
+      "arch": "x64",
+      "runtime": "native",
+      "match": {}
+    }
+  ],
+
+  "values": [
+    {
+      "id": "health",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "name_ptr", "offset": "0x00", "type": "u64", "match": "pointer" },
+          { "name": "inventory_ptr", "offset": "0x08", "type": "u64", "match": "pointer" },
+          { "name": "entity_id", "offset": "0x24", "type": "i32", "match": "equals", "value": "0x5EED1234" },
+          { "name": "max_health", "offset": "0x14", "type": "i32", "match": "equals", "value": 80 }
+        ]
+      },
+      "chain": [{ "offset": "0x10", "means": "health" }],
+      "fields": [{ "name": "max_health", "offset": "0x14", "type": "i32" }],
+      "invariants": ["0 < value <= max_health", "1 <= max_health <= 2000"],
+      "notes": "Anchored on two live pointer slots plus a rare identity value. Deliberately does NOT pin gold or health: a shape must not depend on a value its own cheats edit, or the object stops being findable the moment the trainer works."
+    },
+    {
+      "id": "gold",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "name_ptr", "offset": "0x00", "type": "u64", "match": "pointer" },
+          { "name": "inventory_ptr", "offset": "0x08", "type": "u64", "match": "pointer" },
+          { "name": "entity_id", "offset": "0x24", "type": "i32", "match": "equals", "value": "0x5EED1234" },
+          { "name": "max_health", "offset": "0x14", "type": "i32", "match": "equals", "value": 80 }
+        ]
+      },
+      "chain": [{ "offset": "0x18", "means": "gold" }],
+      "fields": [{ "name": "max_health", "offset": "0x14", "type": "i32" }],
+      "invariants": ["0 <= value <= 99999999", "1 <= max_health <= 2000"]
+    },
+    {
+      "id": "stamina",
+      "value_type": "f32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "name_ptr", "offset": "0x00", "type": "u64", "match": "pointer" },
+          { "name": "inventory_ptr", "offset": "0x08", "type": "u64", "match": "pointer" },
+          { "name": "entity_id", "offset": "0x24", "type": "i32", "match": "equals", "value": "0x5EED1234" },
+          { "name": "max_health", "offset": "0x14", "type": "i32", "match": "equals", "value": 80 }
+        ]
+      },
+      "chain": [{ "offset": "0x1C", "means": "stamina" }],
+      "fields": [{ "name": "max_health", "offset": "0x14", "type": "i32" }],
+      "invariants": ["0 <= value <= 100", "1 <= max_health <= 2000"]
+    },
+    {
+      "id": "ammo",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          { "name": "name_ptr", "offset": "0x00", "type": "u64", "match": "pointer" },
+          { "name": "inventory_ptr", "offset": "0x08", "type": "u64", "match": "pointer" },
+          { "name": "entity_id", "offset": "0x24", "type": "i32", "match": "equals", "value": "0x5EED1234" },
+          { "name": "max_health", "offset": "0x14", "type": "i32", "match": "equals", "value": 80 }
+        ]
+      },
+      "chain": [{ "offset": "0x20", "means": "ammo" }],
+      "fields": [{ "name": "max_health", "offset": "0x14", "type": "i32" }],
+      "invariants": ["0 <= value <= 9999", "1 <= max_health <= 2000"]
+    }
+  ],
+
+  "cheats": [
+    {
+      "id": "infinite_health",
+      "name": "Infinite Health",
+      "group": "Player",
+      "description": "Holds health at its maximum rather than at an arbitrary large number.",
+      "control": { "type": "toggle" },
+      "hotkey": "F1",
+      "on_enable": [{ "op": "freeze", "value": "health", "to": "@max_health" }]
+    },
+    {
+      "id": "set_health",
+      "name": "Set Health",
+      "group": "Player",
+      "control": { "type": "slider", "min": 1, "max": 80, "step": 1, "default": 40 },
+      "hotkey": "F2",
+      "on_enable": [{ "op": "freeze", "value": "health", "to": "@input" }]
+    },
+    {
+      "id": "infinite_stamina",
+      "name": "Infinite Stamina",
+      "group": "Player",
+      "control": { "type": "toggle" },
+      "hotkey": "F3",
+      "on_enable": [{ "op": "freeze", "value": "stamina", "to": 100 }]
+    },
+    {
+      "id": "set_gold",
+      "name": "Set Gold",
+      "group": "Inventory",
+      "description": "Writes once. Enabling the freeze instead would fight the game over every purchase.",
+      "control": { "type": "number", "min": 0, "max": 99999999, "step": 1000, "default": 50000 },
+      "on_enable": [{ "op": "write", "value": "gold", "to": "@input" }]
+    },
+    {
+      "id": "ammo_preset",
+      "name": "Ammo",
+      "group": "Inventory",
+      "control": {
+        "type": "select",
+        "options": [
+          { "label": "Empty", "value": 0 },
+          { "label": "Standard (30)", "value": 30 },
+          { "label": "Full (99)", "value": 99 },
+          { "label": "Absurd (9999)", "value": 9999 }
+        ]
+      },
+      "on_enable": [{ "op": "freeze", "value": "ammo", "to": "@input" }]
+    },
+    {
+      "id": "restock",
+      "name": "Restock Now",
+      "group": "Inventory",
+      "description": "One shot, nothing held.",
+      "control": { "type": "button" },
+      "on_enable": [{ "op": "write", "value": "ammo", "to": 99 }]
+    }
+  ],
+
+  "layout": [
+    { "group": "Player", "cheats": ["infinite_health", "set_health", "infinite_stamina"] },
+    { "group": "Inventory", "cheats": ["set_gold", "ammo_preset", "restock"] }
+  ],
+
+  "provenance": {
+    "author": "memods",
+    "sources": ["tests/DummyTarget/Program.cs"],
+    "verified": { "date": "2026-08-21", "build": "dev" },
+    "notes": "Development fixture. Exercises every control type and both write and freeze against a real process."
+  }
+}
