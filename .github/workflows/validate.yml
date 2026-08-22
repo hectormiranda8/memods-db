@@ -26,9 +26,14 @@ jobs:
         with:
           repository: hectormiranda8/memods
           path: app
-          # Required only while the app repository is private. Create a PAT with
-          # read access to it and store it as MEMODS_APP_TOKEN.
-          token: ${{ secrets.MEMODS_APP_TOKEN || github.token }}
+          # A read-only deploy key on the app repository, needed only while it
+          # is private. Preferred over a token: it reaches exactly one
+          # repository and can read nothing else.
+          #
+          # Note this does not reach pull requests from forks, which never
+          # receive secrets. Those cannot validate until the app repository is
+          # public.
+          ssh-key: ${{ secrets.MEMODS_APP_KEY }}
 
       - uses: actions/setup-dotnet@v4
         with:
