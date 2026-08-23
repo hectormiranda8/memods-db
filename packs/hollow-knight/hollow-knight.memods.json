@@ -1,0 +1,1355 @@
+{
+  "schema": 1,
+  "id": "hollow-knight",
+  "game": {
+    "title": "Hollow Knight",
+    "steam_app_id": 367520
+  },
+  "multiplayer_safe": true,
+  "targets": [
+    {
+      "id": "steam",
+      "process": "hollow_knight.exe",
+      "arch": "x64",
+      "runtime": "mono",
+      "match": {},
+      "notes": "Unity on Mono. The collector is Boehm (mono-2.0-bdwgc.dll), which never moves an object, so a resolved address stays good for the whole session and nothing needs re-deriving on a timer. Every value hangs off the single PlayerData instance, which exists only once a save is loaded."
+    }
+  ],
+  "values": [
+    {
+      "id": "health",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x198",
+          "means": "health"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_health",
+          "offset": "0x19C",
+          "type": "i32"
+        },
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= max_health",
+        "1 <= max_health <= 16",
+        "max_mp == 99"
+      ],
+      "notes": "Masks, not a hit-point bar: one mask is one hit. Held at its maximum rather than an invented number, which the game would treat as a corrupt save."
+    },
+    {
+      "id": "max_health",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x19C",
+          "means": "max_health"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_health_base",
+          "offset": "0x1A0",
+          "type": "i32"
+        },
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "1 <= value <= 16",
+        "1 <= max_health_base <= 16",
+        "max_mp == 99"
+      ]
+    },
+    {
+      "id": "max_health_base",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x1A0",
+          "means": "max_health_base"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "1 <= value <= 16",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ],
+      "notes": "The mask count the game recomputes from on a scene load. Writing max_health alone looks right until the next room, then reverts."
+    },
+    {
+      "id": "soul",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x1D4",
+          "means": "soul"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "mp_reserve_cap",
+          "offset": "0x1EC",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 99",
+        "max_mp == 99",
+        "mp_reserve_cap == 99"
+      ],
+      "notes": "Soul charge. One Focus costs 33, so a full bar is three heals or three casts."
+    },
+    {
+      "id": "nail_damage",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x254",
+          "means": "nail_damage"
+        }
+      ],
+      "fields": [
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        },
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "1 <= value <= 9999",
+        "focus_mp == 33",
+        "max_mp == 99"
+      ]
+    },
+    {
+      "id": "charm_slots_filled",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x4D4",
+          "means": "charm_slots_filled"
+        }
+      ],
+      "fields": [
+        {
+          "name": "charm_slots",
+          "offset": "0x4D0",
+          "type": "i32"
+        },
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 64",
+        "1 <= charm_slots <= 16",
+        "max_mp == 99"
+      ],
+      "notes": "Notches spent. Holding it at zero lets every charm be equipped at once, because the game checks this counter rather than the charms themselves."
+    },
+    {
+      "id": "geo",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x1CC",
+          "means": "geo"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 9999999",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ]
+    },
+    {
+      "id": "essence",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x27C",
+          "means": "essence"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 999999",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ]
+    },
+    {
+      "id": "pale_ore",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x2A4",
+          "means": "pale_ore"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 999",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ]
+    },
+    {
+      "id": "simple_keys",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x2E0",
+          "means": "simple_keys"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 999",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ]
+    },
+    {
+      "id": "rancid_eggs",
+      "value_type": "i32",
+      "anchor": {
+        "kind": "shape",
+        "fields": [
+          {
+            "name": "vtable",
+            "offset": "0x0",
+            "type": "u64",
+            "match": "pointer"
+          },
+          {
+            "name": "profile_id",
+            "offset": "0x184",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "name": "play_time",
+            "offset": "0x188",
+            "type": "f32",
+            "match": "between",
+            "min": 0,
+            "max": 90000000
+          },
+          {
+            "name": "health",
+            "offset": "0x198",
+            "type": "i32",
+            "match": "between",
+            "min": 0,
+            "max": 16
+          },
+          {
+            "name": "max_health",
+            "offset": "0x19C",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_health_base",
+            "offset": "0x1A0",
+            "type": "i32",
+            "match": "between",
+            "min": 1,
+            "max": 16
+          },
+          {
+            "name": "max_mp",
+            "offset": "0x1D0",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "mp_reserve_cap",
+            "offset": "0x1EC",
+            "type": "i32",
+            "match": "equals",
+            "value": 99
+          },
+          {
+            "name": "focus_mp",
+            "offset": "0x1F4",
+            "type": "i32",
+            "match": "equals",
+            "value": 33
+          }
+        ]
+      },
+      "chain": [
+        {
+          "offset": "0x2E4",
+          "means": "rancid_eggs"
+        }
+      ],
+      "fields": [
+        {
+          "name": "max_mp",
+          "offset": "0x1D0",
+          "type": "i32"
+        },
+        {
+          "name": "focus_mp",
+          "offset": "0x1F4",
+          "type": "i32"
+        }
+      ],
+      "invariants": [
+        "0 <= value <= 999",
+        "max_mp == 99",
+        "focus_mp == 33"
+      ]
+    }
+  ],
+  "cheats": [
+    {
+      "id": "infinite_health",
+      "name": "Infinite Masks",
+      "group": "Knight",
+      "description": "Refills your masks as fast as you lose them.",
+      "control": {
+        "type": "toggle"
+      },
+      "hotkey": "F1",
+      "online_risk": "low",
+      "on_enable": [
+        {
+          "op": "freeze",
+          "value": "health",
+          "to": "@max_health"
+        }
+      ]
+    },
+    {
+      "id": "set_masks",
+      "name": "Set Max Masks",
+      "group": "Knight",
+      "description": "Writes the base count the game recomputes from, so it survives the next room.",
+      "control": {
+        "type": "slider",
+        "min": 1,
+        "max": 9,
+        "step": 1,
+        "default": 9
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "max_health_base",
+          "to": "@input"
+        },
+        {
+          "op": "write",
+          "value": "max_health",
+          "to": "@input"
+        },
+        {
+          "op": "write",
+          "value": "health",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "infinite_soul",
+      "name": "Infinite Soul",
+      "group": "Knight",
+      "description": "Holds soul at full, so Focus and spells never run dry.",
+      "control": {
+        "type": "toggle"
+      },
+      "hotkey": "F2",
+      "online_risk": "low",
+      "on_enable": [
+        {
+          "op": "freeze",
+          "value": "soul",
+          "to": 99
+        }
+      ]
+    },
+    {
+      "id": "free_charm_notches",
+      "name": "Free Charm Notches",
+      "group": "Knight",
+      "description": "Holds spent notches at zero so every charm can be equipped at once.",
+      "control": {
+        "type": "toggle"
+      },
+      "hotkey": "F3",
+      "on_enable": [
+        {
+          "op": "freeze",
+          "value": "charm_slots_filled",
+          "to": 0
+        }
+      ]
+    },
+    {
+      "id": "set_nail_damage",
+      "name": "Nail Damage",
+      "group": "Combat",
+      "description": "A fully upgraded pure nail does 21. Much above that trivialises bosses.",
+      "control": {
+        "type": "slider",
+        "min": 5,
+        "max": 200,
+        "step": 1,
+        "default": 50
+      },
+      "on_enable": [
+        {
+          "op": "freeze",
+          "value": "nail_damage",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "set_geo",
+      "name": "Set Geo",
+      "group": "Resources",
+      "description": "Writes once. Holding it would fight the game over every purchase.",
+      "control": {
+        "type": "number",
+        "min": 0,
+        "max": 999999,
+        "step": 500,
+        "default": 10000
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "geo",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "set_essence",
+      "name": "Set Essence",
+      "group": "Resources",
+      "control": {
+        "type": "number",
+        "min": 0,
+        "max": 9999,
+        "step": 100,
+        "default": 900
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "essence",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "set_pale_ore",
+      "name": "Set Pale Ore",
+      "group": "Resources",
+      "description": "Six ore is every nail upgrade in the game.",
+      "control": {
+        "type": "number",
+        "min": 0,
+        "max": 99,
+        "step": 1,
+        "default": 6
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "pale_ore",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "set_simple_keys",
+      "name": "Set Simple Keys",
+      "group": "Resources",
+      "control": {
+        "type": "number",
+        "min": 0,
+        "max": 99,
+        "step": 1,
+        "default": 4
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "simple_keys",
+          "to": "@input"
+        }
+      ]
+    },
+    {
+      "id": "set_rancid_eggs",
+      "name": "Set Rancid Eggs",
+      "group": "Resources",
+      "control": {
+        "type": "number",
+        "min": 0,
+        "max": 99,
+        "step": 1,
+        "default": 10
+      },
+      "on_enable": [
+        {
+          "op": "write",
+          "value": "rancid_eggs",
+          "to": "@input"
+        }
+      ]
+    }
+  ],
+  "layout": [
+    {
+      "group": "Knight",
+      "cheats": [
+        "infinite_health",
+        "set_masks",
+        "infinite_soul",
+        "free_charm_notches"
+      ]
+    },
+    {
+      "group": "Combat",
+      "cheats": [
+        "set_nail_damage"
+      ]
+    },
+    {
+      "group": "Resources",
+      "cheats": [
+        "set_geo",
+        "set_essence",
+        "set_pale_ore",
+        "set_simple_keys",
+        "set_rancid_eggs"
+      ]
+    }
+  ],
+  "provenance": {
+    "author": "memods",
+    "sources": [
+      "Field offsets derived from hollow_knight_Data/Managed/Assembly-CSharp.dll metadata by applying Mono's two-pass instance layout (reference-typed fields first), then confirmed against the running game.",
+      "Cheat table 'Hollow Knight 1.5.12620 v1.0' by Julia Rosell Saldana, which independently confirms nine of these offsets. It anchors through Mono Data Collector to look up PlayerData._instance by name; this pack finds the same object by layout instead, so it needs nothing injected into the game."
+    ],
+    "verified": {
+      "date": "2026-08-22",
+      "build": "Unity 6000.0.61f1"
+    },
+    "notes": "Anchored on the PlayerData singleton, identified by three values that are game constants rather than save state: max soul 99, reserve cap 99, and 33 soul per Focus. They sit within 40 bytes of each other so they seed the scan directly; over 2 GB of heap only two candidates survived to be checked and one matched. profile_id and play_time then separate the loaded save from the empty template PlayerData that also lives on the heap and is otherwise identical. Geo would not separate them, because a fresh save legitimately has none."
+  }
+}
